@@ -36,30 +36,24 @@ public class Prompt {
 
 		int year = -1;
 		int month = 2018;
-		int weekday = 0;
 
 		while (true) {
 			System.out.println("please input the year");
 			System.out.print(PROMPT_YEAR);
 			year = scanner.nextInt();
+			if (year == -1) {
+				break;
+			}
 			System.out.println("please input the month");
 			System.out.print(PROMPT_MONTH);
 			month = scanner.nextInt();
-			
-			System.out.println("Please input the first day of the month. (SU, MO, TU, WE, TH, FR, SA).");
-			String str_weekday = scanner.next();
-			weekday = parseDay(str_weekday);
-			
-			if (month == -1) {
-				break;
-			}
-			if (month > 12) {
+	
+			if (month > 12 || month < 1) {
+				System.out.println("Wrong Input");
 				continue;
 			}
-			if (month == 0) {
-				break;
-			}
-			cal.printCalendar(year, month, weekday);
+		
+			cal.printCalendar(year, month);
 		}
 
 		scanner.close();

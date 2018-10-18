@@ -22,18 +22,21 @@ public class Calendar {
 		}
 	}
 	
-	public void printCalendar(int year, int month, int weekday) {
-		System.out.printf("  <<%4d %3d>>\n" , year ,month);
+	public void printCalendar(int year, int month) {
+		System.out.printf("    <<%4d %d>>\n" , year ,month);
 		System.out.println(" SU MO TU WE TH FR SA");
 		System.out.println("---------------------");
 
+		//get weekday automatically
+		int weekday = getWeekday(year, month, 1);
+		
 		// print blank space
 		for (int i = 0; i < weekday; i++) {
 			System.out.print("   ");
 		}
 		int maxDay = getMaxDaysOfYearAndMonth(year, month);
 		int count = 7 - weekday;
-		int delim = count;
+		int delim = (count < 7) ? count : 0;
 		for (int i = 1; i <= count; i++) {
 			System.out.printf("%3d", i);
 		}
@@ -49,6 +52,29 @@ public class Calendar {
 		
 		System.out.println();
 		System.out.println();
+	}
+
+	private int getWeekday(int year, int month, int day) {
+		int syear = 1970;
+
+		final int STANDARD_WEEKDAY = 4; // 1970.1.1 Thursday
+		
+		int count = 0;
+		
+		for (int i = syear; i < year; i++) {
+			int delta = isLeapYear(i) ? 366 : 365;
+			count += delta;
+		}
+		
+		for (int i = 1; i < month; i++) {
+			int delta = getMaxDaysOfYearAndMonth(year, i);
+			count += delta;
+		}
+		
+		count += day - 1;
+		
+		int weekday = (count + STANDARD_WEEKDAY) % 7;
+		return weekday;
 	}
 }
 
