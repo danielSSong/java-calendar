@@ -1,64 +1,130 @@
 package com.calendar;
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class Prompt {
 
 	private final static String PROMPT_YEAR  = "year> ";
 	private final static String PROMPT_MONTH  = "month> ";
-	/**
-	 * 
-	 * @param week the name of day
-	 * @return 0~6 (0=sunday, 1=monday, 2=tuesday, 3=wednesday, 4=thursday, 5=friday, 6=saturday)
-	 */
-	public int parseDay(String week) {
-		if (week.equals("SU")) {
-			return 0;
-		} else if (week.equals("")) {
-			return 1;
-		} else if (week.equals("TU")) {
-			return 2;
-		} else if (week.equals("WE")) {
-			return 3;
-		} else if (week.equals("TH")) {
-			return 4;
-		} else if (week.equals("FR")) {
-			return 5;
-		} else if (week.equals("SA")) {
-			return 6;
-		} else {
-			return 0;
-		}
+
+	public void printMenu() {
+		System.out.println("+---------------------------");
+		System.out.println("| 1.");
+		System.out.println("| 2.");
+		System.out.println("| 3.");
+		System.out.println("| h.");
+		System.out.println("+---------------------------");
+		
 	}
-	public void runPrompt() {
+	
+	public void runPrompt() throws ParseException {
+		printMenu();
+		
 		Scanner scanner = new Scanner(System.in);
 		Calendar cal = new Calendar();
-
-		int year = -1;
-		int month = 2018;
-
-		while (true) {
-			System.out.println("please input the year");
-			System.out.print(PROMPT_YEAR);
-			year = scanner.nextInt();
-			if (year == -1) {
-				break;
+		boolean isLoop = true;
+		while (isLoop) {
+			
+			String cmd = scanner.next();
+			switch(cmd) {
+				case "1":
+					cmdRegister(scanner, cal);
+					break;
+				case "2":
+					cmdSearch(scanner, cal);
+					break;
+				case "3":
+					cmdCal(scanner, cal);
+					break;
+				case "h":
+					printMenu();
+					break;
+				case "q":
+					isLoop = false;
+					break;
 			}
-			System.out.println("please input the month");
-			System.out.print(PROMPT_MONTH);
-			month = scanner.nextInt();
-	
-			if (month > 12 || month < 1) {
-				System.out.println("Wrong Input");
-				continue;
-			}
-		
-			cal.printCalendar(year, month);
 		}
-
 		scanner.close();
 	}
-	public static void main(String[] args) {
+	
+	public int parseDay(String week) {
+		switch(week) {
+		case "su":
+			return 0;
+		case "mo":
+			return 1;
+		case "tu":
+			return 2;
+		case "we":
+			return 3;
+		case "th":
+			return 4;
+		case "fr":
+			return 5;
+		case "sa":
+			return 6;
+		default:
+			return 0;
+		}
+	}
+	
+	public void cmdCal(Scanner s, Calendar c) {
+		
+		int year = -1;
+		int month = 2018;
+		
+		System.out.println("please input the year");
+		System.out.print(PROMPT_YEAR);
+		year = s.nextInt();
+		if (year == -1) {
+			System.out.println("Wrong Input");
+		}
+		System.out.println("please input the month");
+		System.out.print(PROMPT_MONTH);
+		month = s.nextInt();
+
+		if (month > 12 || month < 1) {
+			System.out.println("Wrong Input");
+			return;
+		}
+	
+		c.printCalendar(year, month);
+	}
+	
+	public void cmdSearch(Scanner s, Calendar c) {
+		System.out.println("[Search Schedule]");
+		System.out.println("Please input the date(yyyy-MM-dd).");
+		String date = s.next();
+		String plan = "";
+
+		try {
+			plan = c.searchPlan(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.err.println("Error Detected");
+		}
+		System.out.println(plan);
+	}
+	
+	public void cmdRegister(Scanner s, Calendar c) throws ParseException {
+		System.out.println("[Register Schedule]");
+		System.out.println("Please input the date(yyyy-MM-dd).");
+		String date = s.next();
+		System.out.println("Please input the schedule.");
+		String text = "";
+		while (true) {
+			String word = s.next();
+			text += word + " ";
+			if (word.endsWith(";")) {
+				break;
+			}
+		}
+		c.registerPlan(date, text);
+		
+	}
+	
+	public static void main(String[] args) throws ParseException {
 		Prompt p = new Prompt();
 		p.runPrompt();
 	}
