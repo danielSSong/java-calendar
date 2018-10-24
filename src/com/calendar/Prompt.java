@@ -12,20 +12,21 @@ public class Prompt {
 		System.out.println("+---------------------------");
 		System.out.println("| 1. Register schedule.");
 		System.out.println("| 2. Search scehdule.");
-		System.out.println("| 3. Show calendar");
-		System.out.println("| h. About calendar menu");
+		System.out.println("| 3. Show calendar.");
+		System.out.println("| h. About calendar menu.");
+		System.out.println("| q. Close the program.");
 		System.out.println("+---------------------------");
 
 	}
 
 	public void runPrompt() throws ParseException {
-		printMenu();
+		
 
 		Scanner scanner = new Scanner(System.in);
 		Calendar cal = new Calendar();
 		boolean isLoop = true;
 		while (isLoop) {
-
+			printMenu();
 			String cmd = scanner.next();
 			switch (cmd) {
 			case "1":
@@ -42,9 +43,9 @@ public class Prompt {
 				break;
 			case "q":
 				isLoop = false;
+				System.out.println("Goodbye.");
 				break;
 			}
-			printMenu();
 		}
 		scanner.close();
 	}
